@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RecipeSphere - Your Digital Cookbook</title>
+    <style>
+        /* Base Styles & CSS Variables */
+        :root {
+            --primary-color: #ff6b6b;
+            --primary-hover: #ff5252;
+            --bg-color: #f4f7f6;
+            --text-color: #2d3436;
+            --sidebar-bg: #2b2d42;
+            --card-bg: #ffffff;
+            --border-radius: 12px;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: white;
+            padding: 30px 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 40px;
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link {
+            background: none;
+            border: none;
+            color: #a4b0be;
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background-color: rgba(255, 107, 107, 0.1);
+            color: var(--primary-color);
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        .header-area {
+            margin-bottom: 30px;
+        }
+
+        .header-area h1 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        /* Cards & Forms */
+        .card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        input[type="text"], select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #dfe6e9;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        button.btn-primary {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+
+        button.btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Recipe Grid */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .recipe-card {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            border-top: 5px solid var(--primary-color);
+            transition: transform 0.3s;
+        }
+
+        .recipe-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recipe-card h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #ffeaa7;
+            color: #d63031;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none;
+        }
+
+        /* About Section Specifics */
+        .team-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .team-member {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid var(--sidebar-bg);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>👨‍🍳 RecipeSphere</h2>
+        <button class="nav-link active" onclick="switchTab('dashboard', this)">Kitchen Dashboard</button>
+        <button class="nav-link" onclick="switchTab('starred', this)">Starred Recipes</button>
+        <button class="nav-link" onclick="switchTab('templates', this)">Templates</button>
+        <button class="nav-link" onclick="switchTab('about', this)">About</button>
+    </div>
+
+    <div class="main-content">
+        
+        <div id="dashboard" class="tab-content">
+            <div class="header-area">
+                <h1>Welcome Back, Chef!</h1>
+                <p>What are we cooking today?</p>
+            </div>
+
+            <div class="card">
+                <h3>Quick Add Recipe</h3>
+                <div class="form-group">
+                    <label>Recipe Title</label>
+                    <input type="text" id="recipe-title" placeholder="e.g., Spicy Paneer Tikka">
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="recipe-category">
+                            <option>Breakfast</option>
+                            <option>Main Course</option>
+                            <option>Desserts</option>
+                            <option>Healthy</option>
+                            <option>Quick Bites</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Difficulty</label>
+                        <select id="recipe-difficulty">
+                            <option>Easy</option>
+                            <option>Medium</option>
+                            <option>Hard</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button class="btn-primary" onclick="addRecipe()">Add to Digital Cookbook</button>
+            </div>
+
+            <h2>Recent Recipes</h2>
+            <div class="recipe-grid" id="recipe-grid">
+                <div class="recipe-card">
+                    <h3>Creamy Tomato Pasta</h3>
+                    <span class="badge">Main Course</span>
+                    <span class="badge" style="background:#55efc4; color:#00b894;">Easy</span>
+                    <p style="font-size: 14px; color: #636e72; margin-top: 15px;">A quick 20-minute weeknight dinner favorite.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="starred" class="tab-content hidden">
+            <div class="header-area">
+                <h1>Starred Recipes</h1>
+                <p>Your absolute favorite meals.</p>
+            </div>
+            <div class="card">
+                <p>No starred recipes yet. Pin your favorites to see them here!</p>
+            </div>
+        </div>
+
+        <div id="templates" class="tab-content hidden">
+            <div class="header-area">
+                <h1>Culinary Templates</h1>
+                <p>Quick-start formats for specific types of cooking.</p>
+            </div>
+            <div class="recipe-grid">
+                <div class="recipe-card">
+                    <h3>Baking Template</h3>
+                    <p style="font-size: 14px; color: #636e72;">Pre-formatted for dry/wet measurements and oven temperatures.</p>
+                </div>
+                <div class="recipe-card">
+                    <h3>Meal Prep Template</h3>
+                    <p style="font-size: 14px; color: #636e72;">Structured for bulk cooking and macros.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="about" class="tab-content hidden">
+            <div class="header-area">
+                <h1>About RecipeSphere</h1>
+            </div>
+            <div class="card">
+                <h2>Version 1.0.0</h2>
+                <p>A modern frontend recipe management application designed to organize culinary creations, manage meal prep, and streamline the cooking experience.</p>
+                
+                <hr style="border: 0; border-top: 1px solid #dfe6e9; margin: 30px 0;">
+                
+                <h3>The Development Team</h3>
+                <div class="team-grid">
+                    <div class="team-member">
+                        <h4 style="margin-top: 0; color: var(--primary-color);">Lead Developer & Solo Member</h4>
+                        <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Krishna Gupta</p>
+                        <p style="font-size: 14px; color: #636e72; margin: 0;">Frontend Architecture & UI Design</p>
+                    </div>
+                    
+                    <div class="team-member">
+                        <h4 style="margin-top: 0; color: var(--primary-color);">Project Mentor</h4>
+                        <p style="font-size: 18px; font-weight: bold; margin-bottom: 5px;">Mr. Mudit</p>
+                        <p style="font-size: 14px; color: #636e72; margin: 0;">Technical Guidance & Code Review</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Navigation Logic
+        function switchTab(tabId, element) {
+            // Hide all sections
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.add('hidden');
+            });
+            
+            // Remove active class from all buttons
+            document.querySelectorAll('.nav-link').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section and highlight button
+            document.getElementById(tabId).classList.remove('hidden');
+            element.classList.add('active');
+        }
+
+        // Add Recipe Logic
+        function addRecipe() {
+            const titleInput = document.getElementById('recipe-title');
+            const category = document.getElementById('recipe-category').value;
+            const difficulty = document.getElementById('recipe-difficulty').value;
+            const title = titleInput.value.trim();
+
+            if (!title) {
+                alert('Please enter a recipe title before adding!');
+                return;
+            }
+
+            // Determine difficulty color
+            let diffColor = '#fdcb6e'; // Default medium (yellow)
+            let diffText = '#e17055';
+            if(difficulty === 'Easy') { diffColor = '#55efc4'; diffText = '#00b894'; }
+            if(difficulty === 'Hard') { diffColor = '#fab1a0'; diffText = '#d63031'; }
+
+            // Create new card element
+            const grid = document.getElementById('recipe-grid');
+            const newCard = document.createElement('div');
+            newCard.className = 'recipe-card';
+            
+            newCard.innerHTML = `
+                <h3>${title}</h3>
+                <span class="badge">${category}</span>
+                <span class="badge" style="background:${diffColor}; color:${diffText};">${difficulty}</span>
+                <p style="font-size: 14px; color: #636e72; margin-top: 15px;">Added just now.</p>
+            `;
+
+            // Add to grid and clear input
+            grid.insertBefore(newCard, grid.firstChild);
+            titleInput.value = '';
+        }
+    </script>
+</body>
+</html>
